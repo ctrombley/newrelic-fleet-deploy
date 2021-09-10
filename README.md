@@ -1,6 +1,7 @@
 ### newrelic-fleet-deploy
 
 PoC for installing New Relic on multiple hosts with Terraform and cloud-init.
+This PoC is based on the [cloud-init tutorial](https://learn.hashicorp.com/tutorials/terraform/cloud-init) on Hashicorp's website.
 
 ### Usage
 
