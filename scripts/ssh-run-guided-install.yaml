@@ -1,0 +1,26 @@
+#cloud-config
+# Add groups to the system
+# Adds the ubuntu group with members 'root' and 'sys'
+# and the empty group hashicorp.
+groups:
+  - ubuntu: [root,sys]
+  - newrelic
+
+# Add users to the system. Users are added after groups are added.
+users:
+  - default
+  - name: nr_user
+    gecos: nr_user
+    shell: /bin/bash
+    primary_group: newrelic
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    groups: users, admin
+    lock_passwd: false
+    ssh_authorized_keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDinH0QD73TNrm+6VoFQWq50GhEDP9LDxjAMKww1v385y41Gxu9/fX+MBCsoC1Unv0I2GzhqRTS6OuTocz/WdOR78Ie1cypbNFzDh5WpdsBwsLy45Ik6SwaE+YkZNGaER00oaVhpl24MaogJseXyiSLvXqpuaRhUYuzc3V2NPZVt4yQ/xQT3u9gscfbC4dk0jFgLGYTSJu0jU8oXRNdlffSf5RFZHqmHCroajhQF06mQ/lMw9XiQ7lA772tJfsTJ6KL6KTolM9RohJID8sUcRzB+mRA08xA6BAX7CVJeyqRhKVK63u9+YUH8P4smRKhWQgduUSYDNb7bknnG00VRiHhNwmX5HxXxcjwroJ2leFqvpy+48IaC/22xZdJQE5kyaPbacYS4unV2jk8OubBGt7dabk6u9MQfF7+8y+idLpTKJNJvzYiIhP7RxYh/oYvYcRt4WJevPXdpZr9WfXAMs6kwp2NbLe5AcRjnSnZ4KeR/8opNLA4c97JAVzJLNLij+8= ctrombley@newrelic.com
+
+# Sets the GOPATH & downloads the demo payload
+runcmd:
+  - sudo su nr_user
+  - curl -Ls https://raw.githubusercontent.com/newrelic/newrelic-cli/master/scripts/install.sh | bash
+  - sudo NEW_RELIC_API_KEY=${new_relic_api_key} NEW_RELIC_ACCOUNT_ID=${new_relic_account_id} /usr/local/bin/newrelic install -y
